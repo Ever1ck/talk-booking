@@ -1,5 +1,6 @@
 stages:
   - docker
+  - test  # new
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -10,7 +11,7 @@ cache:
   key: ${CI_JOB_NAME}
   paths:
     - ${CI_PROJECT_DIR}/services/talk_booking/.venv/
-
+  
 build-python-ci-image:
   image: docker:19.03.0
   services:
@@ -20,5 +21,9 @@ build-python-ci-image:
     - cd ci_cd/python/
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - docker build -t registry.gitlab.com/Ever1ck /talk-booking:cicd-python3.9-slim .
+    - docker build -t registry.gitlab.com/Ever1ck/talk-booking:cicd-python3.9-slim .
     - docker push registry.gitlab.com/Ever1ck/talk-booking:cicd-python3.9-slim
+
+# new
+include:
+  - local: /services/talk_booking/ci-cd.yml
